@@ -12,21 +12,7 @@ function statement(invoice, plays) {
 
     for(let perf of invoice.performances){
         const play = plays[perf.playId];
-        let thisAmount = 0;
-
-        switch(play.type){
-            case "tragedy": // 비극
-                if(perf.audience > 30) {
-                    this.Amount += 1000 * (perf.audience - 30);
-                }
-                break;
-            case "comdey":
-                thisAmount = 3000;
-                if(perf.audience > 20 ) {
-                    thisAmount += 10000 + 500 * (perf.audience - 20);
-                }
-                thisAmount += 300 * perf.audience;
-        }
+        let thisAmount = amountFor(perf,play);
         //포인트를 적립한다.
         volumneCredits += Math.max(perf.audience - 30,0);
 
@@ -39,4 +25,23 @@ function statement(invoice, plays) {
     result += `총액: ${format(thisAmount/ 100 )}`
     result += `적립 포인트: ${volumneCredits}점 \n `;
     return result;
+}
+
+function amountFor(perf,play){
+    let thisAmount = 0;
+    switch(play.type){
+        case "tragedy": // 비극
+            if(perf.audience > 30) {
+                thisAmount += 1000 * (perf.audience - 30);
+            }
+            break;
+        case "comdey":
+            thisAmount = 3000;
+            if(perf.audience > 20 ) {
+                thisAmount += 10000 + 500 * (perf.audience - 20);
+            }
+            thisAmount += 300 * perf.audience;
+            break;
+    }
+    return thisAmount;
 }
